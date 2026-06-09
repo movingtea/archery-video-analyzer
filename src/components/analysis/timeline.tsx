@@ -57,10 +57,10 @@ export function Timeline({
             <button
               key={marker.id}
               type="button"
-              title={`${marker.shotLabel} · ${PHASE_LABELS[marker.phase]} · ${formatTimestamp(marker.timestamp)}`}
+              aria-label={`${marker.shotLabel} ${PHASE_LABELS[marker.phase]} at ${formatTimestamp(marker.timestamp)}`}
               onClick={() => onSeek(marker.timestamp)}
               className={cn(
-                "absolute top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border text-[9px] font-semibold transition-transform hover:scale-110",
+                "absolute top-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full border text-[10px] font-semibold transition-transform lg:hover:scale-110",
                 marker.isSelectedShot
                   ? "border-cyan-400 bg-cyan-500/20 text-cyan-200"
                   : "border-slate-600 bg-slate-800 text-slate-400",

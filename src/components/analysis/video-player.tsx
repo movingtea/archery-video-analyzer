@@ -107,6 +107,8 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
         <video
           ref={videoRef}
           src={src}
+          playsInline
+          preload="metadata"
           className="aspect-video w-full bg-black object-contain"
           onLoadedMetadata={(event) => {
             setIsReady(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Phase } from "@prisma/client";
+import type { Phase } from "@/generated/prisma/client";
 import { Check } from "lucide-react";
 import { PHASE_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";

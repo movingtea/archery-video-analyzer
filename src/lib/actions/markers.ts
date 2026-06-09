@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import type { Phase } from "@prisma/client";
+import type { Phase } from "@/generated/prisma/client";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PHASES } from "@/lib/constants";

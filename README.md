@@ -6,7 +6,7 @@ Phase 1 MVP for competitive recurve bow video analysis: upload videos, manage a 
 
 - Next.js App Router
 - TypeScript
-- Prisma + PostgreSQL
+- Prisma 7 + PostgreSQL (`@prisma/adapter-pg`)
 - Tailwind CSS + shadcn/ui-style components
 - NextAuth (credentials)
 
@@ -18,6 +18,7 @@ Phase 1 MVP for competitive recurve bow video analysis: upload videos, manage a 
 docker compose up -d
 cp .env.example .env
 npm install
+npm run db:generate
 npm run db:push
 npm run db:seed
 npm run dev
@@ -63,6 +64,8 @@ src/
 prisma/
 ├── schema.prisma
 └── seed.ts
+prisma.config.ts              # Prisma 7 CLI config (DATABASE_URL, seed)
+src/generated/prisma/         # Generated Prisma Client (prisma generate)
 public/uploads/                   # Local video storage (MVP)
 ```
 
@@ -103,10 +106,17 @@ Not in scope (Phase 2+):
 - MediaPipe / pose overlay
 - AI auto-detection
 
+## Prisma 7 Notes
+
+- Database URL is configured in `prisma.config.ts` (not in `schema.prisma`)
+- Prisma Client is generated to `src/generated/prisma/` via `prisma generate`
+- Runtime uses `@prisma/adapter-pg` with a direct PostgreSQL connection string
+- After schema changes: `npm run db:generate && npm run db:push`
+
 ## Environment
 
 | Variable | Description |
 |----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
+| `DATABASE_URL` | PostgreSQL connection string (used by `prisma.config.ts` and runtime adapter) |
 | `AUTH_SECRET` | NextAuth secret |
 | `NEXTAUTH_URL` | App URL (e.g. `http://localhost:3000`) |

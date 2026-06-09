@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Clock, Film } from "lucide-react";
-import type { VideoStatus } from "@prisma/client";
+import type { VideoStatus } from "@/generated/prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { VIDEO_STATUS_LABELS } from "@/lib/constants";
 import { formatDate, formatDuration } from "@/lib/utils";

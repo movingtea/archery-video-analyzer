@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { Phase, PhaseMarker } from "@prisma/client";
+import type { Phase, PhaseMarker } from "@/generated/prisma/client";
 import { ExternalLink } from "lucide-react";
 import { PHASE_LABELS } from "@/lib/constants";
 import { formatTimestamp } from "@/lib/utils";

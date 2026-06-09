@@ -1,4 +1,10 @@
-import type { Phase, PhaseMarker, Shot, Video, VideoStatus } from "@prisma/client";
+import type {
+  Phase,
+  PhaseMarker,
+  Shot,
+  Video,
+  VideoStatus,
+} from "@/generated/prisma/client";
 
 export type VideoWithCounts = Video & {
   _count: { shots: number };

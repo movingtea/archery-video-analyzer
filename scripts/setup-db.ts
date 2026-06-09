@@ -29,6 +29,12 @@ async function main() {
     // Database may already exist on subsequent runs
   }
 
+  console.log("Generating Prisma Client...");
+  execSync("npx prisma generate", {
+    stdio: "inherit",
+    env: { ...process.env, DATABASE_URL },
+  });
+
   console.log("Running Prisma migrations...");
   execSync("npx prisma db push", {
     stdio: "inherit",
@@ -36,7 +42,7 @@ async function main() {
   });
 
   console.log("Seeding database...");
-  execSync("npx tsx prisma/seed.ts", {
+  execSync("npx prisma db seed", {
     stdio: "inherit",
     env: { ...process.env, DATABASE_URL },
   });

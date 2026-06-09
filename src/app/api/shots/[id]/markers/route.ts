@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { Phase } from "@prisma/client";
+import type { Phase } from "@/generated/prisma/client";
 import { deletePhaseMarker, upsertPhaseMarker } from "@/lib/actions/markers";
 
 type RouteContext = {

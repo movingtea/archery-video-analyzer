@@ -1,4 +1,4 @@
-import type { Phase } from "@prisma/client";
+import type { Phase } from "@/generated/prisma/client";
 
 export const DEFAULT_FPS = 30;
 

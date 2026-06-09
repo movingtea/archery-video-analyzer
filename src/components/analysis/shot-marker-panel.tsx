@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Phase } from "@prisma/client";
+import type { Phase } from "@/generated/prisma/client";
 import type { ShotWithMarkers } from "@/types";
 import { Plus } from "lucide-react";
 import { upsertPhaseMarker } from "@/lib/actions/markers";

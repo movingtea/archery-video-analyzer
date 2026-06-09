@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated client
+/src/generated/prisma/
+
+# local data
+.pgdata/
+public/uploads/*
+!public/uploads/.gitkeep

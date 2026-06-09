@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum VideoStatus {
+  PENDING
+  READY
+  ANALYZING
+  DONE
+  FAILED
+}
+
+enum Phase {
+  SETUP
+  DRAW
+  ANCHOR
+  RELEASE
+  FOLLOW_THROUGH
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  videos    Video[]
+}
+
+model Video {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  fileUrl   String
+  fileName  String
+  mimeType  String
+  size      Int
+  fps       Float       @default(30)
+  duration  Float?
+  status    VideoStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  shots     Shot[]
+
+  @@index([userId])
+}
+
+model Shot {
+  id        String        @id @default(cuid())
+  videoId   String
+  video     Video         @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  index     Int
+  label     String?
+  note      String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  markers   PhaseMarker[]
+
+  @@unique([videoId, index])
+  @@index([videoId])
+}
+
+model PhaseMarker {
+  id          String   @id @default(cuid())
+  shotId      String
+  shot        Shot     @relation(fields: [shotId], references: [id], onDelete: Cascade)
+  phase       Phase
+  timestamp   Float
+  frameNumber Int
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([shotId, phase])
+  @@index([shotId])
+}

@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "db:start": "tsx scripts/start-db.ts",
-    "dev": "tsx scripts/start-db.ts & next dev",
-    "build": "prisma generate && next build",
+    "dev": "tsx scripts/start-db.ts & next dev --webpack",
+    "dev:app": "next dev --webpack",
+    "build": "prisma generate && next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "db:setup": "tsx scripts/setup-db.ts",

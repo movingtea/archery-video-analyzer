@@ -4,7 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function LoginPage() {
+const errorMessages: Record<string, string> = {
+  invalid: "Invalid email or password.",
+  auth: "Sign in failed. Check that the database is running and try again.",
+};
+
+type LoginPageProps = {
+  searchParams: Promise<{ error?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { error } = await searchParams;
+  const errorMessage = error ? errorMessages[error] : null;
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#080B12] px-4">
       <div className="w-full max-w-md rounded-xl border border-slate-700/60 bg-slate-900/70 p-8 shadow-2xl backdrop-blur-sm">
@@ -19,6 +31,12 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
+
+        {errorMessage ? (
+          <p className="mb-4 rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+            {errorMessage}
+          </p>
+        ) : null}
 
         <form action={loginAction} className="space-y-4">
           <div className="space-y-2">

@@ -12,21 +12,26 @@ export default async function VideosPage() {
       <Topbar
         title="Video Library"
         description="Browse and open training videos for frame-by-frame analysis"
-        actions={<VideoUploadDialog />}
+        actions={
+          <div className="hidden sm:block">
+            <VideoUploadDialog />
+          </div>
+        }
       />
 
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="relative flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 pb-24 sm:px-6 sm:py-6 lg:pb-6">
         {videos.length > 0 ? (
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {videos.map((video) => (
               <VideoCard
                 key={video.id}
                 id={video.id}
                 title={video.title}
+                fileName={video.fileName}
                 createdAt={video.createdAt}
                 duration={video.duration}
+                fps={video.fps}
                 status={video.status}
-                shotCount={video._count.shots}
               />
             ))}
           </div>
@@ -37,6 +42,20 @@ export default async function VideosPage() {
             action={<VideoUploadDialog />}
           />
         )}
+
+        <div className="fixed bottom-20 right-4 z-30 sm:hidden">
+          <VideoUploadDialog
+            trigger={
+              <button
+                type="button"
+                aria-label="Upload video"
+                className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/30 transition-colors hover:bg-cyan-400"
+              >
+                <span className="text-2xl leading-none">+</span>
+              </button>
+            }
+          />
+        </div>
       </div>
     </>
   );

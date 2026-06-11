@@ -27,7 +27,7 @@ export default async function ShotDetailPage({ params }: ShotDetailPageProps) {
         title={shot.label ?? `Shot #${shot.index}`}
         description={`From ${shot.video.title}`}
         actions={
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="min-h-11 w-full sm:w-auto">
             <Link href={`/videos/${shot.videoId}/analysis`}>
               <Film className="h-4 w-4" />
               Open Workbench
@@ -36,7 +36,7 @@ export default async function ShotDetailPage({ params }: ShotDetailPageProps) {
         }
       />
 
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 pb-24 sm:px-6 sm:py-6 lg:pb-6">
         <Link
           href={`/videos/${shot.videoId}/analysis`}
           className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200"
@@ -83,14 +83,11 @@ export default async function ShotDetailPage({ params }: ShotDetailPageProps) {
             <h2 className="mb-4 text-sm font-semibold uppercase tracking-widest text-slate-400">
               Phase Markers
             </h2>
-            <PhaseMarkerList
-              markers={shot.markers}
-              shotId={shot.id}
-            />
+            <PhaseMarkerList markers={shot.markers} />
             {shot.markers.length > 0 ? (
               <div className="mt-6 flex flex-wrap gap-2">
                 {shot.markers.map((marker) => (
-                  <Button key={marker.id} variant="outline" size="sm" asChild>
+                  <Button key={marker.id} variant="outline" className="min-h-11" asChild>
                     <Link
                       href={`/videos/${shot.videoId}/analysis?t=${marker.timestamp}`}
                     >

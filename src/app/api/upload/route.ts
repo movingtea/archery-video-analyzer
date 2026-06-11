@@ -1,10 +1,10 @@
-import { mkdir, writeFile } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-
-const MAX_FILE_SIZE = 500 * 1024 * 1024; // 500 MB
+import {
+  ALLOWED_VIDEO_MIME_PREFIX,
+  MAX_VIDEO_FILE_SIZE,
+} from "@/lib/storage/constants";
+import { getVideoStorage } from "@/lib/storage";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -20,37 +20,41 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (!file.type.startsWith("video/")) {
+    if (!file.type.startsWith(ALLOWED_VIDEO_MIME_PREFIX)) {
       return NextResponse.json(
         { error: "Only video files are allowed" },
         { status: 400 },
       );
     }
 
-    if (file.size > MAX_FILE_SIZE) {
+    if (file.size > MAX_VIDEO_FILE_SIZE) {
       return NextResponse.json(
         { error: "File exceeds 500 MB limit" },
         { status: 400 },
       );
     }
 
-    const uploadsDir = path.join(process.cwd(), "public", "uploads");
-    await mkdir(uploadsDir, { recursive: true });
-
-    const extension = path.extname(file.name) || ".mp4";
-    const storedName = `${randomUUID()}${extension}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadsDir, storedName), buffer);
-
-    return NextResponse.json({
-      fileUrl: `/uploads/${storedName}`,
-      fileName: file.name,
+    const storage = getVideoStorage();
+    const stored = await storage.saveVideo({
+      buffer,
+      originalName: file.name,
       mimeType: file.type,
       size: file.size,
-      duration: null,
+    });
+
+    return NextResponse.json({
+      fileUrl: stored.fileUrl,
+      fileName: stored.fileName,
+      mimeType: stored.mimeType,
+      size: stored.size,
+      storageKey: stored.storageKey,
+      duration: stored.duration,
     });
   } catch (error) {
     console.error("Upload error:", error);
-    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+    const message =
+      error instanceof Error ? error.message : "Upload failed";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

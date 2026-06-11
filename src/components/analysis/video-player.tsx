@@ -34,7 +34,9 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
     ref,
   ) {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isReady, setIsReady] = useState(false);
+    const [status, setStatus] = useState<"loading" | "ready" | "error">(
+      "loading",
+    );
 
     const emitTimeUpdate = useCallback(() => {
       const video = videoRef.current;
@@ -55,17 +57,17 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
         seekTo(timestamp: number) {
           const video = videoRef.current;
           if (!video) return;
-          const duration = video.duration || 0;
-          video.currentTime = Math.max(0, Math.min(timestamp, duration));
+          const maxDuration = video.duration || 0;
+          video.currentTime = Math.max(0, Math.min(timestamp, maxDuration));
           emitTimeUpdate();
         },
         stepForwardFrame() {
           const video = videoRef.current;
           if (!video) return;
-          const duration = video.duration || 0;
+          const maxDuration = video.duration || 0;
           video.pause();
           video.currentTime = Math.min(
-            duration,
+            maxDuration,
             video.currentTime + frameStep(fps),
           );
           emitTimeUpdate();
@@ -74,7 +76,10 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
           const video = videoRef.current;
           if (!video) return;
           video.pause();
-          video.currentTime = Math.max(0, video.currentTime - frameStep(fps));
+          video.currentTime = Math.max(
+            0,
+            video.currentTime - frameStep(fps),
+          );
           emitTimeUpdate();
         },
         getCurrentTime() {
@@ -94,22 +99,31 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
     );
 
     useEffect(() => {
-      setIsReady(false);
+      setStatus("loading");
     }, [src]);
+
+    useEffect(() => {
+      emitTimeUpdate();
+    }, [fps, emitTimeUpdate]);
 
     return (
       <div
         className={cn(
-          "relative overflow-hidden rounded-lg border border-slate-700/60 bg-black",
+          "relative flex min-h-[220px] flex-1 overflow-hidden rounded-xl border bg-black transition-shadow",
+          status === "ready"
+            ? "border-slate-700/60 shadow-[0_0_32px_rgba(34,211,238,0.06)]"
+            : "border-slate-700/60",
           className,
         )}
       >
         <video
           ref={videoRef}
           src={src}
-          className="aspect-video w-full bg-black object-contain"
+          preload="metadata"
+          playsInline
+          className="h-full w-full bg-black object-contain"
           onLoadedMetadata={(event) => {
-            setIsReady(true);
+            setStatus("ready");
             onDurationChange?.(event.currentTarget.duration);
             emitTimeUpdate();
           }}
@@ -117,10 +131,22 @@ export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(
           onPlay={() => onPlayStateChange?.(true)}
           onPause={() => onPlayStateChange?.(false)}
           onEnded={() => onPlayStateChange?.(false)}
+          onError={() => setStatus("error")}
         />
-        {!isReady ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/80 text-sm text-slate-400">
-            Loading video…
+
+        {status === "loading" ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-slate-950/90">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-700 border-t-cyan-400" />
+            <p className="text-sm text-slate-400">Loading video…</p>
+          </div>
+        ) : null}
+
+        {status === "error" ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-950/90 px-6 text-center">
+            <p className="text-sm text-red-400">
+              Failed to load video. Check that the file exists at{" "}
+              <span className="font-mono text-xs text-slate-400">{src}</span>
+            </p>
           </div>
         ) : null}
       </div>

@@ -10,6 +10,8 @@ export const PHASES: Phase[] = [
   "FOLLOW_THROUGH",
 ];
 
+export const PHASE_COUNT = PHASES.length;
+
 export const PHASE_LABELS: Record<Phase, string> = {
   SETUP: "Setup",
   DRAW: "Draw",

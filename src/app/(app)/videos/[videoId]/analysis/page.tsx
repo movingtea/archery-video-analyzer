@@ -23,9 +23,11 @@ export default async function AnalysisPage({
   }
 
   return (
-    <AnalysisWorkbench
-      video={video}
-      initialTime={Number.isFinite(initialTime) ? initialTime : undefined}
-    />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <AnalysisWorkbench
+        video={video}
+        initialTime={Number.isFinite(initialTime) ? initialTime : undefined}
+      />
+    </div>
   );
 }

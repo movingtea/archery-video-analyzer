@@ -31,7 +31,7 @@ export async function createShot(videoId: string, label?: string | null) {
     data: {
       videoId,
       index: nextIndex,
-      label: label?.trim() || `Shot #${nextIndex}`,
+      label: label?.trim() || null,
     },
     include: { markers: true },
   });

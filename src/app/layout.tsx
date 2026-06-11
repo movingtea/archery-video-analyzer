@@ -18,6 +18,13 @@ export const metadata: Metadata = {
     "Competitive recurve bow video analysis workbench for manual phase marking and frame-by-frame review.",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +35,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full bg-[#080B12] text-slate-50">{children}</body>
+      <body className="min-h-full overflow-x-hidden bg-slate-950 text-slate-50">
+        {children}
+      </body>
     </html>
   );
 }
